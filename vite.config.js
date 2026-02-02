@@ -1,32 +1,32 @@
-import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
-import { viteMockServe } from 'vite-plugin-mock'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
+import { viteMockServe } from 'vite-plugin-mock'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
     viteMockServe({
-      mockPath: 'mock',
-      enable: true,
-      logger: true
-    }),
-    createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
-      symbolId: 'icon-[dir]-[name]',
-      inject: 'body-last',
-      customDomId: '__svg__icons__dom__'
+      mockPath: './mock',
+      localEnabled: true,
+      prodEnabled: false,
+      watchFiles: true
     })
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    },
+      '@': path.resolve(__dirname, './src')
+    }
   },
+  server: {
+    host: true,
+    port: 5173,
+    open: true,
+    hot: true // 确保热更新启用
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false
+  }
 })
